@@ -3,10 +3,15 @@ import './style.css';
 
 document.addEventListener('DOMContentLoaded', () => {
   if (createApp()) {
-    retrieveForecast(
-      (position) => forecastSuccessHandler(position, weatherService, displayForecast),
-      (error) => forecastErrorHandler(error, weatherService, displayForecast)
-    );
+    try {
+      retrieveForecast(
+        (position) => forecastSuccessHandler(position, weatherService, displayForecast),
+        (error) => forecastErrorHandler(error, weatherService, displayForecast)
+      );
+    } catch (error) {
+      console.error(error);
+      alert('An error occurred. Please try again later.');
+    }
   }
 });
 
@@ -117,7 +122,20 @@ export const weatherService: WeatherService = Object.freeze({
 });
 
 export function displayForecast(forecast: Forecast) {
-  document.getElementById('display')!.innerText = JSON.stringify(forecast, null, 2);
-  document.getElementById('display')!.classList.add('visible');
-  document.querySelector('.spinner')!.remove();
+  const display = document.getElementById('display');
+  const spinner = document.querySelector('.spinner');
+  
+  if (display === null) {
+    console.error('Unable to find display element');
+    return;
+  }
+
+  if (spinner === null) {
+    console.error('Unable to find spinner element');
+    return;
+  }
+
+  display.innerText = JSON.stringify(forecast, null, 2);
+  display.classList.add('visible');
+  spinner.remove();
 }
