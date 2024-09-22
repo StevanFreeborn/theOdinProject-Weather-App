@@ -38,7 +38,7 @@ describe('retrieveForecast', () => {
     originalGeolocation = navigator.geolocation;
     (navigator as any).geolocation = {
       getCurrentPosition: getPositionMock,
-    } as unknown as Geolocation;
+    };
   });
 
   afterAll(() => {
